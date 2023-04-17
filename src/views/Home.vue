@@ -68,24 +68,11 @@
           />
         </div>
         <div
-          class="w-[30%] px-2 pt-2 pb-2 h-[500px] bg-white flex flex-col mb-5 border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700"
+          class="w-[30%] px-2 pt-2 pb-3 min-h-[500px] bg-white flex flex-col mb-5 border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700"
           v-for="movie in store.movies"
           v-else
         >
-          <div class="w-full h-5/6 m-0">
-            <img
-              :src="movie.Poster"
-              alt=""
-              class="object-cover w-full h-full hover:cursor-pointer"
-            />
-          </div>
-
-          <h5
-            class="m-0 py-2 text-md font-bold tracking-tight text-gray-900 dark:text-white"
-          >
-            {{ movie.Title.length > 20 ? movie.Title + " ..." : movie.Title }}
-          </h5>
-          <span class="text-orange-500">{{ movie.Year }}</span>
+          <movieCard :movie="movie" />
         </div>
       </div>
     </div>
@@ -96,6 +83,7 @@ import axios from "axios";
 import { useStore } from "@/stores/index";
 import { ref, onMounted, watch } from "vue";
 import { isProxy, toRaw } from "vue";
+import movieCard from "@/components/movieCard.vue";
 
 const store = useStore();
 
@@ -197,6 +185,7 @@ watch(sortings, (sortBy) => {
     }
   }
 });
+
 watch(order, () => {
   if (sortings.value == "Title") {
     if (order.value == "as") {
@@ -210,7 +199,7 @@ watch(order, () => {
 
         return 0;
       });
-      console.log(res);
+      store.movies = res;
     } else {
       var res = toRaw(store.movies).sort(function (a, b) {
         if (a.Title.toLowerCase() > b.Title.toLowerCase()) {
@@ -256,15 +245,6 @@ watch(order, () => {
     }
   }
 });
-
-const sorting = () => {
-  /* if (isProxy(store.movies)) {
-    var res = toRaw(store.movies).sort(
-      (a, b) => parseFloat(b.Metascore) - parseFloat(a.Metascore)
-    );
-    console.log(res);
-  } */
-};
 
 onMounted(async () => {
   isLoading.value = true;

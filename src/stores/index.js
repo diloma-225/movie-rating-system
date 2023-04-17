@@ -4,6 +4,11 @@ import { ref } from 'vue';
 export const useStore = defineStore('store', () => {
     const movies = ref([]);
 
-  
-    return { movies }
+    const ratings = ref([]);
+
+    const reviews =  ref([]);
+
+    return { movies, ratings, reviews }
+  },{
+    persist: true,
   })
